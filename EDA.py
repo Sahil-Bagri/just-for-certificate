@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-# Auto build from website directly - no csv load
+# Auto build from website directly 
 def build_dataset(base_url, max_pages=2):
     records = []
     for page in range(1, max_pages+1):
