@@ -1,3 +1,21 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Auto build from website directly - no csv load
+def build_dataset(base_url, max_pages=2):
+    records = []
+    for page in range(1, max_pages+1):
+        soup = BeautifulSoup(requests.get(f"{base_url}/page/{page}/").text, 'html.parser')
+        for item in soup.find_all('div', class_='quote'):
+            records.append({
+                'text': item.find('span', class_='text').get_text(strip=True),
+                'author': item.find('small', class_='author').get_text(strip=True),
+                'tags': ', '.join([t.get_text() for t in item.find_all('a', class_='tag')])
+            })
+    return pd.DataFrame(records)
+
+df = build_dataset('http://quotes.toscrape.com', max_pages=2)
 import pandas as pd
 import numpy as np
 
